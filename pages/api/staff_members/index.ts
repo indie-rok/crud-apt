@@ -2,7 +2,7 @@
 import nc from "next-connect";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
-import Company from "../../../models/Company";
+import StaffMember from "../../../models/StaffMember";
 
 export const config = {
   api: {
@@ -10,10 +10,10 @@ export const config = {
   },
 };
 
-const companyInstance = new Company();
+const staffMemberInstance = new StaffMember();
 
-interface NextApiRequestWithCompany extends NextApiRequest {
-  body: Prisma.CompanyCreateInput;
+interface NextApiRequestWithStaffMember extends NextApiRequest {
+  body: Prisma.StaffMemberUncheckedCreateInput;
 }
 
 const handler = nc<NextApiRequest, NextApiResponse>({
@@ -26,14 +26,16 @@ const handler = nc<NextApiRequest, NextApiResponse>({
   },
 })
   .get(async (_, res) => {
-    res.send(await companyInstance.getAll());
+    res.send(await staffMemberInstance.getAll());
   })
-  .post(async (req: NextApiRequestWithCompany, res) => {
+  .post(async (req: NextApiRequestWithStaffMember, res) => {
     const { body } = req;
-
-    const company = await companyInstance.create(body);
-
-    res.send(company);
+    try {
+      const staffMember = await staffMemberInstance.create(body);
+      res.send(staffMember);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   });
 
 export default handler;
