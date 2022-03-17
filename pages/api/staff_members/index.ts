@@ -2,7 +2,7 @@
 import nc from "next-connect";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
-import StaffMember from "../../../models/StaffMember";
+import StaffMember from "../../../prisma/models/StaffMember";
 
 export const config = {
   api: {

@@ -1,5 +1,5 @@
 import { PrismaClient, Company as CompanyType, Prisma } from "@prisma/client";
-import Joi from 'joi'
+import Joi from "joi";
 
 const prisma = new PrismaClient();
 
@@ -12,12 +12,14 @@ export default class Company {
     return prisma.company.findMany();
   }
 
+  async getStaffMembers(companyId) {
+    return await prisma.company
+      .findUnique({ where: { id: parseInt(companyId) } })
+      .members();
+  }
+
   async create(data: Prisma.CompanyCreateInput): Promise<CompanyType> {
-    try {
-      await schema.validateAsync(data);
-      return prisma.company.create({ data });
-    } catch (err) {
-      return err;
-    }
+    await schema.validateAsync(data);
+    return prisma.company.create({ data });
   }
 }

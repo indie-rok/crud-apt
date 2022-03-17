@@ -2,7 +2,7 @@
 import nc from "next-connect";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
-import Company from "../../../prisma/models/Company";
+import Appoinment from "../../../prisma/models/Appoinment";
 
 export const config = {
   api: {
@@ -10,10 +10,10 @@ export const config = {
   },
 };
 
-const companyInstance = new Company();
+const appointmentInstance = new Appoinment();
 
-interface NextApiRequestWithCompany extends NextApiRequest {
-  body: Prisma.CompanyCreateInput;
+interface NextApiRequestWithAppoinment extends NextApiRequest {
+  body: Prisma.AppointmentUncheckedCreateInput;
 }
 
 const handler = nc<NextApiRequest, NextApiResponse>({
@@ -26,15 +26,16 @@ const handler = nc<NextApiRequest, NextApiResponse>({
   },
 })
   .get(async (_, res) => {
-    res.send(await companyInstance.getAll());
+    res.send(await appointmentInstance.getAll());
   })
-  .post(async (req: NextApiRequestWithCompany, res) => {
+  .post(async (req: NextApiRequestWithAppoinment, res) => {
     const { body } = req;
 
     try {
-      const company = await companyInstance.create(body);
-      res.send(company);
+      const appointment = await appointmentInstance.create(body);
+      res.send(appointment);
     } catch (err) {
+      console.log(err)
       res.status(500).send(err);
     }
   });
