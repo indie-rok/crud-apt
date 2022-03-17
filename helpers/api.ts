@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Prisma } from "@prisma/client";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -10,8 +11,23 @@ async function getCompanies() {
   return result.data;
 }
 
-async function createCompany(newCompanyName) {
+async function createCompany(newCompanyName: string) {
   return apiClient.post("/companies", { name: newCompanyName });
 }
 
-export { apiClient, getCompanies, createCompany };
+async function getStaffMemebrs() {
+  const result = await apiClient.get("/staff_members");
+  return result.data;
+}
+
+async function createStaffMember(data: Prisma.StaffMemberUncheckedCreateInput) {
+  return apiClient.post("/staff_members", data);
+}
+
+export {
+  apiClient,
+  getCompanies,
+  createCompany,
+  getStaffMemebrs,
+  createStaffMember,
+};

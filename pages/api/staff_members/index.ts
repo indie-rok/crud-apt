@@ -34,6 +34,7 @@ const handler = nc<NextApiRequest, NextApiResponse>({
       const staffMember = await staffMemberInstance.create(body);
       res.send(staffMember);
     } catch (err) {
+      console.log(err)
       res.status(500).send(err);
     }
   });

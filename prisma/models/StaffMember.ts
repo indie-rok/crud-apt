@@ -18,8 +18,18 @@ export default class StaffMember {
     return prisma.staffMember.findMany();
   }
 
-  async create(data: Prisma.StaffMemberUncheckedCreateInput): Promise<StaffMemberType> {
-      await schema.validateAsync(data);
-      return prisma.staffMember.create({ data });
+  async create(data: Prisma.StaffMemberUncheckedCreateInput): Promise<any> {
+    await schema.validateAsync(data);
+    const company = await prisma.company.findUnique({where: { id: parseInt(data.companyId as any) }})
+
+    const user = await prisma.staffMember.create({
+      data: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        companyId: company.id
+      },
+    });
+
+    return user;
   }
 }
