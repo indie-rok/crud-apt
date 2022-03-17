@@ -1,18 +1,10 @@
 import { useCallback } from 'react';
 
-import {
-  useMutation,
-  useQuery,
-  useQueryClient
-} from 'react-query'
-
-import { getCompanies, createCompany } from '../helpers/api'
+import { useCompanies, useCompanyMutation } from '../components/hooks/companies';
 
 export default function Companies() {
-  const { data: companies, isLoading, error } = useQuery('companies', getCompanies);
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation(createCompany, { onSuccess: () => { queryClient.invalidateQueries('companies') } })
+  const { isLoading, error, data: companies } = useCompanies()
+  const mutation = useCompanyMutation()
 
   const createCompanyHandler = useCallback((event) => {
     event.preventDefault()

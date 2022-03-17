@@ -1,20 +1,14 @@
 import { useCallback } from 'react';
 
-import {
-  useMutation,
-  useQuery,
-  useQueryClient
-} from 'react-query'
 
-import { getCompanies, getStaffMemebrs, createStaffMember } from '../helpers/api'
+import { useStaffMembers, useStaffMembersMutation } from '../components/hooks/staffMembers';
+import { useCompanies } from '../components/hooks/companies';
 
 export default function StaffMember() {
-  const queryCompanies = useQuery('companies', getCompanies);
-  const queryStaffMembers = useQuery('staff_members', getStaffMemebrs);
+  const queryCompanies = useCompanies()
+  const queryStaffMembers = useStaffMembers()
 
-  const queryClient = useQueryClient()
-
-  const mutation = useMutation(createStaffMember, { onSuccess: () => { queryClient.invalidateQueries('staff_members') } })
+  const mutation = useStaffMembersMutation()
 
   const createStaffMemberHandler = useCallback((event) => {
     event.preventDefault();
@@ -39,8 +33,8 @@ export default function StaffMember() {
       <h4>Create staff member</h4>
       <form onSubmit={createStaffMemberHandler}>
         {(mutation.isError && mutation.error instanceof Error) ? <div>{mutation.error.message}</div> : null}
-        <input type="text" name="firstName" />
-        <input type="text" name="lastName" />
+        <input type="text" name="firstName" placeholder='firstname' />
+        <input type="text" name="lastName" placeholder='lastname' />
         <select name="companyId">
           {queryCompanies.data.map(({ id, name }) => (<option key={id} value={id}>{name}</option>))}
         </select>
