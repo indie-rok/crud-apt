@@ -35,7 +35,8 @@ const handler = nc<NextApiRequest, NextApiResponse>({
       const company = await companyInstance.create(body);
       res.send(company);
     } catch (err) {
-      res.status(500).send(err);
+      console.log(err)
+      res.status(400).send(err);
     }
   });
 

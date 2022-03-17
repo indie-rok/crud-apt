@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 const schema = Joi.object({
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
-  company: Joi.number().positive().required(),
+  companyId: Joi.number().positive().required(),
   staffMemberId: Joi.number().positive().required(),
 });
 

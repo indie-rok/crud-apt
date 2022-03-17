@@ -1,8 +1,5 @@
-import type { NextPage } from 'next'
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import Menu from '../components/menu'
+import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
   return (

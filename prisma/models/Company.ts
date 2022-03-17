@@ -4,7 +4,7 @@ import Joi from "joi";
 const prisma = new PrismaClient();
 
 const schema = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).required(),
+  name: Joi.string().min(3).max(30).required(),
 });
 
 export default class Company {
