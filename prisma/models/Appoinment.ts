@@ -16,7 +16,9 @@ const schema = Joi.object({
 
 export default class Appointment {
   async getAll(): Promise<AppointmentType[]> {
-    return prisma.appointment.findMany();
+    return prisma.appointment.findMany({
+      include: { staffMember: true, company: true },
+    });
   }
 
   async create(

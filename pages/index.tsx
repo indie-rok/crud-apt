@@ -14,6 +14,10 @@ import {
   getCompanyMembers,
 } from "../helpers/api";
 
+import FullCalendar from '@fullcalendar/react' // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+
+
 const Home: NextPage = () => {
   const [companyId, setCompanyId] = useState(1);
 
@@ -52,6 +56,11 @@ const Home: NextPage = () => {
     setCompanyId(event.target.value)
   }
 
+  const calculateCalendar = () => {
+    return queryApoinments.data.map(apt => {
+      return { title: `Apt for: ${apt.company.name}`, start: apt.startDate, end: apt.endDate }
+    })
+  }
 
   return (
     <div>
@@ -60,8 +69,8 @@ const Home: NextPage = () => {
       <h4>Create an apoinment</h4>
       <form onSubmit={createApoinmentHandler}>
         {(apoinmentMutation.isError && apoinmentMutation.error instanceof Error) ? <div>{apoinmentMutation.error.message}</div> : null}
-        <input type="datetime-local" value="2022-03-13T08:30" name="startDate" onChange={() => { }} />
-        <input type="datetime-local" value="2022-03-13T08:30" name="endDate" onChange={() => { }} />
+        <input type="datetime-local" defaultValue="2022-03-01T08:30" name="startDate" onChange={() => { }} />
+        <input type="datetime-local" defaultValue="2022-03-01T09:30" name="endDate" onChange={() => { }} />
         <select name="companyId" onChange={onCompanyChangeHandler}>
           {queryCompanies.data.map(({ id, name }) => (<option key={id} value={id}>{name}</option>))}
         </select>
@@ -77,7 +86,13 @@ const Home: NextPage = () => {
 
       </form>
 
-      {queryApoinments.data.map(apt => (<li key={apt.id}>{apt.startDate} - {apt.endDate} {apt.companyId} {apt.staffMemberId}</li>))}
+
+      <FullCalendar
+        plugins={[dayGridPlugin]}
+        initialView="dayGridMonth"
+        weekends={false}
+        events={calculateCalendar()}
+      />
 
     </div>
   )
