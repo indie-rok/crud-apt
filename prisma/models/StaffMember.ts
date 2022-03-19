@@ -1,11 +1,7 @@
-import {
-  PrismaClient,
-  StaffMember as StaffMemberType,
-  Prisma,
-} from "@prisma/client";
+import { StaffMember as StaffMemberType, Prisma } from "@prisma/client";
 import Joi from "joi";
 
-const prisma = new PrismaClient();
+import prisma from "../../helpers/prismaClient";
 
 const schema = Joi.object({
   firstName: Joi.string().alphanum().min(3).max(30).required(),
@@ -19,7 +15,9 @@ export default class StaffMember {
   }
 
   async findOne(staffmemberId): Promise<StaffMemberType> {
-    return prisma.staffMember.findUnique({ where: { id: parseInt(staffmemberId) } });
+    return prisma.staffMember.findUnique({
+      where: { id: parseInt(staffmemberId) },
+    });
   }
 
   async create(data: Prisma.StaffMemberUncheckedCreateInput): Promise<any> {

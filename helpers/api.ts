@@ -38,6 +38,9 @@ async function createAppoinment(data: Prisma.AppointmentUncheckedCreateInput) {
   return apiClient.post("/appointments", data);
 }
 
+
+
+
 export {
   apiClient,
   getCompanies,

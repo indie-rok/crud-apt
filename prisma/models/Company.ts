@@ -1,7 +1,7 @@
-import { PrismaClient, Company as CompanyType, Prisma } from "@prisma/client";
+import { Company as CompanyType, Prisma } from "@prisma/client";
 import Joi from "joi";
 
-const prisma = new PrismaClient();
+import prisma from "../../helpers/prismaClient";
 
 const schema = Joi.object({
   name: Joi.string().min(3).max(30).required(),

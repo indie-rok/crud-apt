@@ -1,11 +1,7 @@
-import {
-  PrismaClient,
-  Appointment as AppointmentType,
-  Prisma,
-} from "@prisma/client";
+import { Appointment as AppointmentType, Prisma } from "@prisma/client";
 import Joi from "joi";
 
-const prisma = new PrismaClient();
+import prisma from "../../helpers/prismaClient";
 
 const schema = Joi.object({
   startDate: Joi.date().required(),
