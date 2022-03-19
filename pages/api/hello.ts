@@ -13,7 +13,5 @@ export default async function handler(
 ) {
   const test = await prisma.company.findMany();
 
-  console.log(test);
-
   res.status(200).json({ name: "John Doe" });
 }

@@ -11,7 +11,12 @@ async function getCompanies() {
   return result.data;
 }
 
-async function createCompany(newCompanyName: string) {
+async function getCompanyMembers(number) {
+  const result = await apiClient.get(`/companies/${number}/members`);
+  return result.data;
+}
+
+async function createCompany(newCompanyName: Prisma.CompanyUncheckedCreateInput) {
   return apiClient.post("/companies", { name: newCompanyName });
 }
 
@@ -24,10 +29,22 @@ async function createStaffMember(data: Prisma.StaffMemberUncheckedCreateInput) {
   return apiClient.post("/staff_members", data);
 }
 
+async function getAppoinments() {
+  const result = await apiClient.get("/appointments");
+  return result.data;
+}
+
+async function createAppoinment(data: Prisma.AppointmentUncheckedCreateInput) {
+  return apiClient.post("/appointments", data);
+}
+
 export {
   apiClient,
   getCompanies,
+  getCompanyMembers,
   createCompany,
   getStaffMemebrs,
   createStaffMember,
+  getAppoinments,
+  createAppoinment,
 };

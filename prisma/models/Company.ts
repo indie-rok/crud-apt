@@ -12,6 +12,10 @@ export default class Company {
     return prisma.company.findMany();
   }
 
+  async findOne(companyId): Promise<CompanyType> {
+    return prisma.company.findUnique({ where: { id: parseInt(companyId) } });
+  }
+
   async getStaffMembers(companyId) {
     return await prisma.company
       .findUnique({ where: { id: parseInt(companyId) } })
