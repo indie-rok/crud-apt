@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import {
@@ -12,13 +13,14 @@ export function useCompanies() {
   return queryCompanies;
 }
 
-export function useCompanyMembers(companyId = 1) {
-  const queryCompanies = useQuery(
+export function useCompanyMembers() {
+  const [companyId, setCompanyId] = useState(1);
+  const queryCompanyMembers = useQuery(
     ["company_members", companyId],
     getCompanyMembers
   );
 
-  return queryCompanies;
+  return {queryCompanyMembers, setCompanyId};
 }
 
 export function useCompanyMutation() {

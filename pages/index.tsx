@@ -1,34 +1,43 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { useCallback, useState } from 'react';
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
 
 import type { NextPage } from 'next'
+import { useCallback } from 'react';
 
 import { useCompanies, useCompanyMembers } from '../components/hooks/companies';
 import { useStaffMembers } from '../components/hooks/staffMembers';
 import { useAppoinments, useAppoinmentMutation } from '../components/hooks/appoinments';
 
-import { useQuery } from "react-query";
-
-import {
-  getCompanyMembers,
-} from "../helpers/api";
-
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
-
-
 const Home: NextPage = () => {
-  const [companyId, setCompanyId] = useState(1);
 
   const queryCompanies = useCompanies()
   const queryStaffMembers = useStaffMembers()
   const queryApoinments = useAppoinments()
   const apoinmentMutation = useAppoinmentMutation()
 
-  const companyMembers = useQuery(['company_members', companyId], () => getCompanyMembers(companyId))
+  const { queryCompanyMembers, setCompanyId } = useCompanyMembers()
 
+  const calculateCalendar = useCallback(() => {
+    return queryApoinments.data.map(apt => {
+      return { title: `Apt for: ${apt.company.name}`, start: apt.startDate, end: apt.endDate }
+    })
+  }, [queryApoinments])
 
+  const onCompanyChangeHandler = useCallback((event) => {
+    setCompanyId(event.target.value)
+  }, [setCompanyId])
+
+  const createApoinmentHandler = useCallback((event) => {
+    event.preventDefault()
+
+    const startDate = new Date(event.target.elements.startDate.value).toISOString();
+    const endDate = new Date(event.target.elements.endDate.value).toISOString();
+    const companyId = event.target.elements.companyId.value;
+    const staffMemberId = event.target.elements.staffMemberId.value;
+
+    apoinmentMutation.mutate({ startDate, endDate, companyId, staffMemberId })
+  }, [apoinmentMutation])
 
   if (queryApoinments.isLoading || queryCompanies.isLoading || queryStaffMembers.isLoading) {
     return <>Loading..</>
@@ -38,29 +47,6 @@ const Home: NextPage = () => {
     return <>Error getting the data</>
   }
 
-  const createApoinmentHandler = (event) => {
-    event.preventDefault()
-
-
-
-    const startDate = new Date(event.target.elements.startDate.value).toISOString();
-    const endDate = new Date(event.target.elements.endDate.value).toISOString();
-    const companyId = event.target.elements.companyId.value;
-    const staffMemberId = event.target.elements.staffMemberId.value;
-
-    // console.log({ startDate, endDate, companyId, staffMemberId })
-    apoinmentMutation.mutate({ startDate, endDate, companyId, staffMemberId })
-  }
-
-  const onCompanyChangeHandler = (event) => {
-    setCompanyId(event.target.value)
-  }
-
-  const calculateCalendar = () => {
-    return queryApoinments.data.map(apt => {
-      return { title: `Apt for: ${apt.company.name}`, start: apt.startDate, end: apt.endDate }
-    })
-  }
 
   return (
     <div>
@@ -76,8 +62,8 @@ const Home: NextPage = () => {
         </select>
 
         <select name="staffMemberId">
-          {companyMembers.status === "loading" && <>Loading..</>}
-          {companyMembers.status === "success" && companyMembers.data.map(
+          {queryCompanyMembers.status === "loading" && <>Loading..</>}
+          {queryCompanyMembers.status === "success" && queryCompanyMembers.data.map(
             ({ firstName, lastName, id }) => (<option key={id} value={id}>{firstName} {lastName}</option>)
           )}
         </select>

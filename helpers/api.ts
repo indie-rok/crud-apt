@@ -11,8 +11,8 @@ async function getCompanies() {
   return result.data;
 }
 
-async function getCompanyMembers(number) {
-  const result = await apiClient.get(`/companies/${number}/members`);
+async function getCompanyMembers({queryKey}) {
+  const result = await apiClient.get(`/companies/${queryKey[1]}/members`);
   return result.data;
 }
 
